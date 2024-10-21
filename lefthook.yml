@@ -1,0 +1,5 @@
+pre-commit:
+    commands:
+        check:
+            glob: "*.{js,ts,json}"
+            run: npx @biomejs/biome check --write --no-errors-on-unmatched --colors=off {staged_files}

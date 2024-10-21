@@ -1,0 +1,99 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "cli": {
+        "analytics": false,
+        "schematicCollections": ["@angular-eslint/schematics"]
+    },
+    "projects": {
+        "rustube-music": {
+            "projectType": "application",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "none",
+                    "changeDetection": "OnPush",
+                    "skipImport": true
+                }
+            },
+            "root": "",
+            "sourceRoot": "src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": "dist/rustube-music",
+                        "index": "src/index.html",
+                        "browser": "src/main.ts",
+                        "tsConfig": "tsconfig.app.json",
+                        "assets": [
+                            "src/assets",
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@taiga-ui/icons/src",
+                                "output": "assets/taiga-ui/icons"
+                            }
+                        ],
+                        "styles": [
+                            "src/styles.css",
+                            "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
+                            "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less"
+                        ]
+                    },
+                    "configurations": {
+                        "production": {
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "500kb",
+                                    "maximumError": "1mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "2kb",
+                                    "maximumError": "4kb"
+                                }
+                            ],
+                            "outputHashing": "all"
+                        },
+                        "development": {
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "port": 1420
+                    },
+                    "configurations": {
+                        "production": {
+                            "buildTarget": "rustube-music:build:production"
+                        },
+                        "development": {
+                            "buildTarget": "rustube-music:build:development"
+                        }
+                    },
+                    "defaultConfiguration": "development"
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+                    }
+                },
+                "test": {
+                    "builder": "@angular-builders/jest:run",
+                    "options": {
+                        "configPath": "jest.config.js",
+                        "passWithNoTests": true
+                    }
+                }
+            }
+        }
+    }
+}
