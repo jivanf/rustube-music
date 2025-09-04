@@ -4,8 +4,8 @@
     "version": "0.1.0",
     "identifier": "com.rustube.music.app",
     "build": {
-        "beforeDevCommand": "pnpm start",
-        "devUrl": "http://localhost:1420",
+        "beforeDevCommand": "pnpm dev",
+        "devUrl": "http://localhost:8080",
         "beforeBuildCommand": "pnpm build",
         "frontendDist": "../dist/rustube-music/browser"
     },

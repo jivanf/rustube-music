@@ -1,4 +1,4 @@
-# System files
+# OS
 .DS_Store
 Thumbs.db
 
@@ -11,9 +11,23 @@ src-tauri/.env
 # npm
 node_modules
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Output
+.output
+.vercel
+.netlify
+.wrangler
+/.svelte-kit
+/build
 
 # Firebase
 .firebase/
