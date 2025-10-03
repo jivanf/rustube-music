@@ -1,12 +1,11 @@
-use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use tauri::AppHandle;
-use tauri_plugin_shell::ShellExt;
-use tiny_http::Server;
+use tauri_plugin_opener::OpenerExt;
+use tiny_http::{Response, Server};
 use url::Url;
 
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Tokens {
     access_token: String,
     id_token: String,
@@ -16,12 +15,15 @@ pub struct Tokens {
 pub async fn sign_in(app_handle: AppHandle) -> Tokens {
     let server = start_redirect_server();
 
-    let redirect_uri = format!("http://localhost:{}", server.server_addr().to_ip().unwrap().port());
+    let redirect_uri = format!(
+        "http://localhost:{}",
+        server.server_addr().to_ip().unwrap().port()
+    );
     println!("{}", redirect_uri);
 
     app_handle
-        .shell()
-        .open(sign_in_url(&redirect_uri), None)
+        .opener()
+        .open_path(sign_in_url(&redirect_uri), None::<&str>)
         .expect("TODO: Send error to frontend");
 
     let code = receive_authorization_code(server);
@@ -33,14 +35,8 @@ fn sign_in_url<'a>(redirect_uri: &str) -> String {
     Url::parse_with_params(
         "https://accounts.google.com/o/oauth2/v2/auth",
         &[
-            (
-                "client_id",
-                std::env::var("FIREBASE_CLIENT_ID").unwrap(),
-            ),
-            (
-                "redirect_uri",
-                redirect_uri.to_owned(),
-            ),
+            ("client_id", std::env::var("FIREBASE_CLIENT_ID").unwrap()),
+            ("redirect_uri", redirect_uri.to_owned()),
             (
                 "scope",
                 "openid https://www.googleapis.com/auth/userinfo.email profile".to_owned(),
@@ -73,8 +69,13 @@ fn receive_authorization_code(server: Server) -> String {
 
         if code_result != None {
             code = code_result.unwrap();
+
+            request.respond(Response::empty(200)).unwrap();
+
             break;
         }
+
+        request.respond(Response::empty(422)).unwrap();
     }
 
     code
@@ -84,12 +85,20 @@ async fn get_tokens(code: &str, redirect_uri: &str) -> Tokens {
     let mut data: HashMap<&str, String> = HashMap::new();
     data.insert("code", code.to_owned());
     data.insert("client_id", std::env::var("FIREBASE_CLIENT_ID").unwrap());
-    data.insert("client_secret", std::env::var("FIREBASE_CLIENT_SECRET").unwrap());
+    data.insert(
+        "client_secret",
+        std::env::var("FIREBASE_CLIENT_SECRET").unwrap(),
+    );
     data.insert("redirect_uri", redirect_uri.to_owned());
     data.insert("grant_type", "authorization_code".to_owned());
 
     let client = reqwest::Client::new();
-    let response = client.post("https://accounts.google.com/o/oauth2/token").json(&data).send().await.unwrap();
+    let response = client
+        .post("https://accounts.google.com/o/oauth2/token")
+        .json(&data)
+        .send()
+        .await
+        .unwrap();
 
     response.json::<Tokens>().await.unwrap()
 }
