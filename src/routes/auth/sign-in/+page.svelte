@@ -1,6 +1,6 @@
 <script lang="ts">
     import LoginForm from '$lib/components/login-form.svelte';
-    import { AuthService } from '$lib/core/auth/auth.svelte.js';
+    import { AuthService } from '$lib/core/services/auth/auth.svelte.js';
     import { inject } from '$lib/core/di';
 
     const authService = inject(AuthService);

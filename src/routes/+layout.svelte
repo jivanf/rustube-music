@@ -1,12 +1,12 @@
 <script lang="ts">
     import '../app.css';
     import favicon from '$lib/assets/favicon.svg';
-    import { AuthService } from '$lib/core/auth/auth.svelte';
     import { provide } from '$lib/core/di/di';
-    import { Firebase } from '$lib/core/firebase/firebase.js';
+    import { AuthService } from '$lib/core/services/auth/auth.svelte';
+    import { FirebaseState } from '$lib/core/state/firebase/firebase.js';
 
     provide([
-        Firebase,
+        FirebaseState,
 
         // `AuthService` must be provided after Firebase because it uses Firebase auth
         AuthService,
@@ -19,4 +19,4 @@
     <link rel="icon" href={favicon} />
 </svelte:head>
 
-{@render children?.()}
+{@render children()}

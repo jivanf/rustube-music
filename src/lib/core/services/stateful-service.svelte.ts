@@ -1,6 +1,6 @@
-import type { ServiceState } from '$lib/core/state/stateful-service.types';
+import type { ServiceState } from '$lib/core/services/stateful-service.types';
 
-export abstract class StatefulServiceSvelte<TModel> {
+export abstract class StatefulService<TModel> {
     private state = $state<ServiceState<TModel>>({
         items: undefined,
     });
