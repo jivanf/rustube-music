@@ -5,29 +5,11 @@ Thumbs.db
 # IDEs
 .idea/
 
-# Tauri
-src-tauri/.env
-
-# npm
-node_modules
-
 # Env
 .env
 .env.*
 !.env.example
 !.env.test
-
-# Vite
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
-
-# Output
-.output
-.vercel
-.netlify
-.wrangler
-/.svelte-kit
-/build
 
 # Firebase
 .firebase/
@@ -35,3 +17,20 @@ firebase-debug.log
 .runtimeconfig.json
 ui-debug.log
 
+# Tauri
+src-tauri/.env
+
+# npm
+node_modules
+
+# ESLint
+.eslintcache
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Output
+.output
+/.svelte-kit
+/build
