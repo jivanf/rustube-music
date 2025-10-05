@@ -1,6 +1,7 @@
-import { redirect } from '@sveltejs/kit';
+import { goto } from '$app/navigation';
+import { resolve } from '$app/paths';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = () => {
-    redirect(302, '/auth/sign-in');
+    goto(resolve('/auth/sign-in'));
 };
