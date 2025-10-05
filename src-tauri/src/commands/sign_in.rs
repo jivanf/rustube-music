@@ -1,7 +1,10 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use tauri::AppHandle;
+use std::sync::Arc;
+use serde_json::to_value;
+use tauri::{AppHandle, Runtime, Wry};
 use tauri_plugin_opener::OpenerExt;
+use tauri_plugin_store::{Store, StoreExt};
 use tiny_http::{Response, Server};
 use url::Url;
 
@@ -13,13 +16,15 @@ pub struct Tokens {
 
 #[tauri::command]
 pub async fn sign_in(app_handle: AppHandle) -> Tokens {
+    // Ensure we can access the store before signing in
+    let store = app_handle.store("store").unwrap();
+
     let server = start_redirect_server();
 
     let redirect_uri = format!(
         "http://localhost:{}",
         server.server_addr().to_ip().unwrap().port()
     );
-    println!("{}", redirect_uri);
 
     app_handle
         .opener()
@@ -28,7 +33,11 @@ pub async fn sign_in(app_handle: AppHandle) -> Tokens {
 
     let code = receive_authorization_code(server);
 
-    get_tokens(&code, &redirect_uri).await
+    let tokens = get_tokens(&code, &redirect_uri).await;
+
+    save_tokens(&tokens, store);
+
+    tokens
 }
 
 fn sign_in_url<'a>(redirect_uri: &str) -> String {
@@ -101,4 +110,8 @@ async fn get_tokens(code: &str, redirect_uri: &str) -> Tokens {
         .unwrap();
 
     response.json::<Tokens>().await.unwrap()
+}
+
+fn save_tokens(tokens: &Tokens, store: Arc<Store<Wry>>) {
+    store.set("auth.tokens", to_value(tokens).unwrap());
 }
