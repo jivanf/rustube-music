@@ -1,7 +1,8 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+mod auth;
 mod commands;
 
-use commands::sign_in;
+use commands::{sign_in, get_tokens};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -9,7 +10,7 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![sign_in]);
+        .invoke_handler(tauri::generate_handler![sign_in, get_tokens]);
 
     #[cfg(debug_assertions)]
     {

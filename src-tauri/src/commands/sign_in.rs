@@ -1,18 +1,12 @@
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use serde_json::to_value;
-use tauri::{AppHandle, Runtime, Wry};
+use tauri::{AppHandle, Wry};
 use tauri_plugin_opener::OpenerExt;
 use tauri_plugin_store::{Store, StoreExt};
 use tiny_http::{Response, Server};
 use url::Url;
-
-#[derive(Serialize, Deserialize)]
-pub struct Tokens {
-    access_token: String,
-    id_token: String,
-}
+use crate::auth::Tokens;
 
 #[tauri::command]
 pub async fn sign_in(app_handle: AppHandle) -> Tokens {

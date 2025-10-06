@@ -12,6 +12,7 @@ export class UserState {
 
     constructor() {
         const authService = inject(AuthService);
+        console.debug(authService);
 
         this.user = $derived(authService.user!);
     }

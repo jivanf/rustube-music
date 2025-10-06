@@ -1,8 +1,9 @@
 import { container } from '$lib/core/di/container';
 import { isClassProvider, type Provider } from '$lib/core/di/di.types';
 import type { Type } from '$lib/utils/types';
+import { isAsyncInitializable } from './init';
 
-export function provide(providers: Provider<unknown>[]): void {
+export async function provide(providers: Provider<unknown>[]): Promise<void> {
     for (const provider of providers) {
         let provide;
         let value;
@@ -15,7 +16,11 @@ export function provide(providers: Provider<unknown>[]): void {
             value = provider.useValue;
         }
 
-        container.set(provide, value);
+        if (isAsyncInitializable(value)) {
+            await value.init();
+        }
+
+        container.set(provide, value)
     }
 }
 
