@@ -1,6 +1,6 @@
+import { container } from '$lib/core/di/container';
 import { isClassProvider, type Provider } from '$lib/core/di/di.types';
 import type { Type } from '$lib/utils/types';
-import { getContext, setContext } from 'svelte';
 
 export function provide(providers: Provider<unknown>[]): void {
     for (const provider of providers) {
@@ -15,10 +15,10 @@ export function provide(providers: Provider<unknown>[]): void {
             value = provider.useValue;
         }
 
-        setContext(provide, value);
+        container.set(provide, value);
     }
 }
 
 export function inject<TType extends Type>(type: TType): InstanceType<TType> {
-    return getContext<InstanceType<TType>>(type);
+    return container.get(type) as InstanceType<TType>;
 }
