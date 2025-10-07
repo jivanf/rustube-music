@@ -1,3 +1,4 @@
+import type { InjectionToken } from '$lib/core/di/injection-token';
 import type { Type } from '$lib/utils/types';
 
 export type ClassProvider<TProvider> = Type<TProvider>;
@@ -7,7 +8,7 @@ export function isClassProvider<TProvider>(provider: Provider<TProvider>): provi
 }
 
 export type ValueProvider<TProvider> = {
-    provide: Type<TProvider>;
+    provide: Type<TProvider> | InjectionToken<TProvider>;
     useValue: TProvider;
 };
 

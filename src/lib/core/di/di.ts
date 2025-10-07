@@ -24,6 +24,8 @@ export async function provide(providers: Provider<unknown>[]): Promise<void> {
     }
 }
 
-export function inject<TType extends Type>(type: TType): InstanceType<TType> {
-    return container.get(type) as InstanceType<TType>;
+export function inject<TType extends Type>(type: TType): InstanceType<TType>;
+export function inject<TValue>(token: InjectionToken<TValue>): TValue;
+export function inject<TType extends Type, TValue>(type: TType | InjectionToken<TValue>): InstanceType<TType> | TValue {
+    return container.get(type) as InstanceType<TType> | TValue;
 }
