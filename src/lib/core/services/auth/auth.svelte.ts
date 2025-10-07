@@ -8,6 +8,8 @@ import type { Tokens } from '$lib/core/services/auth/auth.types';
 export class AuthService extends StatefulService<User> {
     user = $derived(this.items?.[0] ?? null);
 
+    authenticated = $derived(this.user !== null);
+
     private readonly auth: Auth;
 
     constructor() {
