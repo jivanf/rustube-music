@@ -29,7 +29,7 @@
             <DropdownMenuTrigger asChild>
                 {#snippet child({ props })}
                     <SidebarMenuButton {...props}>
-                        {user.uid}
+                        {user.displayName}
                         <EllipsisVertical class="ml-auto" />
                     </SidebarMenuButton>
                 {/snippet}
