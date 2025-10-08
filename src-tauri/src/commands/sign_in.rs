@@ -42,7 +42,7 @@ fn sign_in_url<'a>(redirect_uri: &str) -> String {
             ("redirect_uri", redirect_uri.to_owned()),
             (
                 "scope",
-                "openid https://www.googleapis.com/auth/userinfo.email profile".to_owned(),
+                "openid profile https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube".to_owned(),
             ),
             ("response_type", "code".to_owned()),
             ("prompt", "select_account".to_owned()),
