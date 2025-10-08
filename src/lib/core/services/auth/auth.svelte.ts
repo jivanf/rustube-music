@@ -1,10 +1,9 @@
-import { invoke } from '@tauri-apps/api/core';
-import { type Auth, GoogleAuthProvider, signInWithCredential, signOut, type User } from 'firebase/auth';
 import { inject } from '$lib/core/di';
+import type { Tokens } from '$lib/core/services/auth/auth.types';
 import { TOKEN_PROVIDER, type TokenProvider } from '$lib/core/services/auth/providers/provider';
 import { StatefulService } from '$lib/core/services/stateful-service.svelte.js';
 import { FirebaseState } from '$lib/core/state/firebase/firebase';
-import type { Tokens } from '$lib/core/services/auth/auth.types';
+import { type Auth, GoogleAuthProvider, signInWithCredential, signOut, type User } from 'firebase/auth';
 
 export class AuthService extends StatefulService<User> {
     user = $derived(this.items?.[0] ?? null);
@@ -19,8 +18,6 @@ export class AuthService extends StatefulService<User> {
 
         this.auth = inject(FirebaseState).auth;
         this.tokenProvider = inject(TOKEN_PROVIDER);
-
-        void this.init();
     }
 
     /**
@@ -29,7 +26,7 @@ export class AuthService extends StatefulService<User> {
     async init(): Promise<User | null> {
         const tokens = await this.tokenProvider.getTokens();
 
-        return tokens !== null ? this.signInWithTokens(tokens) : null;
+        return tokens !== null ? this.signInWithTokens(tokens).catch(() => null) : null;
     }
 
     async signIn(): Promise<User> {
