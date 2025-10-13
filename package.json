@@ -6,7 +6,8 @@
     "scripts": {
         "tauri": "tauri",
         "auth:init": "scripts/auth/init.ts",
-        "dev": "pnpm run auth:init && vite dev",
+        "innertube:proxy": "scripts/innertube/proxy.ts",
+        "dev": "pnpm run auth:init && pnpx concurrently 'pnpm run innertube:proxy' 'vite dev'",
         "build": "vite build",
         "preview": "vite preview",
         "prepare": "svelte-kit sync || echo ''",
@@ -24,7 +25,8 @@
         "@tauri-apps/plugin-store": "~2.4.0",
         "firebase": "^12.3.0",
         "rxjs": "^7.8.2",
-        "sveltefire": "^0.4.5"
+        "sveltefire": "^0.4.5",
+        "youtubei.js": "^15.1.1"
     },
     "devDependencies": {
         "@biomejs/biome": "2.2.2",
