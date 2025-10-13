@@ -5,7 +5,8 @@
     "type": "module",
     "scripts": {
         "tauri": "tauri",
-        "dev": "vite dev",
+        "auth:init": "scripts/auth/init.ts",
+        "dev": "pnpm run auth:init && vite dev",
         "build": "vite build",
         "preview": "vite preview",
         "prepare": "svelte-kit sync || echo ''",
