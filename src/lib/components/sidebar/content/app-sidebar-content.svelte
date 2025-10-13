@@ -1,19 +1,19 @@
 <script lang="ts">
-import { ListMusicIcon } from '@lucide/svelte';
-import type { SidebarItem } from '$lib/components/sidebar/app-sidebar.types';
-import {
-    Menu,
-    MenuButton,
-    MenuItem,
-} from '$lib/components/ui/sidebar';
+    import type { SidebarItem } from '$lib/components/sidebar/app-sidebar.types';
+    import { Menu, MenuButton, MenuItem } from '$lib/components/ui/sidebar';
+    import { inject } from '$lib/core/di';
+    import { PlaylistService } from '$lib/core/services/playlist';
 
-const items: SidebarItem[] = [
-    {
-        title: 'Playlists',
-        route: '/playlists',
-        icon: ListMusicIcon,
-    },
-];
+    const playlistService = inject(PlaylistService);
+
+    let items = $state<SidebarItem[]>([]);
+
+    playlistService.read().then((playlists) => {
+        items = playlists.map((playlist) => ({
+            title: playlist.title,
+            route: '#',
+        }));
+    });
 </script>
 
 <Menu>
@@ -21,8 +21,10 @@ const items: SidebarItem[] = [
         <MenuItem>
             <MenuButton>
                 {#snippet child({ props })}
-                    <a {...props} href={item.route} >
-                        <item.icon />
+                    <a {...props} href={item.route}>
+                        {#if item.icon !== undefined}
+                            <item.icon />
+                        {/if}
 
                         <span>{item.title}</span>
                     </a>
